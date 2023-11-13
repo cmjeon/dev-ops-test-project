@@ -11,4 +11,4 @@ fi
 
 sleep 5
 
-nohup java -jar build/demo-0.0.1-SNAPSHOT.jar &
+nohup /opt/java/openjdk/bin/java -jar build/demo-0.0.1-SNAPSHOT.jar &
