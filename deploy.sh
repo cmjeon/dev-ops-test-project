@@ -26,15 +26,4 @@ chmod +x $JAR_NAME
 
 echo "> $JAR_NAME 실행"
 
-pid=`pgrep -f java`
-if [ $pid ]
-then
-    kill -9 $pid;
-    echo '$pid process kill complete'
-else
-    echo 'pid is empty'
-fi
-
-sleep 5
-
 nohup /opt/java/openjdk/bin/java -jar $JAR_NAME 2>&1 &
