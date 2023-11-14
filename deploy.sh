@@ -27,5 +27,5 @@ chmod +x $JAR_NAME
 
 echo "> $JAR_NAME 실행"
 
-nohup /opt/java/openjdk/bin/java -jar $JAR_NAME 2>&1 &
+nohup java -jar $JAR_NAME &
 
