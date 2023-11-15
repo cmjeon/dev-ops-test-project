@@ -30,3 +30,5 @@ echo "> $JAR_NAME 실행"
 sudo nohup /opt/java/openjdk/bin/java -jar $JAR_NAME > nohup.out 2>&1 &
 
 echo "> 해치웠나"
+
+cat nohup.out
