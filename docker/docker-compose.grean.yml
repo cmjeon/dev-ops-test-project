@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  backend:
+    build: .
+    ports:
+      - "8112:80"
+    container_name: dev-ops-green
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      - servernetwork
+
+networks:
+  servernetwork:
+    external: true
+    driver: bridge
