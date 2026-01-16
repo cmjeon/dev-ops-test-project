@@ -3,11 +3,10 @@ services:
   backend:
     build: .
     ports:
-      - "8111:80"
-    container_name: dev-ops-app
+      - "8112:80"
+    container_name: dev-ops-green
     environment:
       - TZ=Asia/Seoul
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     networks:
       - servernetwork
 

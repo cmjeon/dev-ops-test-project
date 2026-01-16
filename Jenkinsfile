@@ -7,21 +7,6 @@ pipeline{
         gradle 'gradle 8.4'
     }
     stages{
-        stage('Select Environment') {
-            steps {
-                script {
-                    if (env.BRANCH_NAME == 'prod') {
-                        env.DEPLOY_PROFILE = 'prod'
-                        env.CONFIG_CREDENTIALS = 'application-prod'
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        env.DEPLOY_PROFILE = 'dev'
-                        env.CONFIG_CREDENTIALS = 'application-dev'
-                    } else {
-                        error "Unsupported branch for deployment: ${env.BRANCH_NAME}"
-                    }
-                }
-            }
-        }
         stage('Checkout') {
             steps {
                 checkout scm
@@ -32,10 +17,12 @@ pipeline{
                 sh 'gradle clean'
             }
         }
-        stage('Replace Properties') {
+        stage('Replace Prod Properties') {
             steps {
-                withCredentials([file(credentialsId: "${env.CONFIG_CREDENTIALS}", variable: 'APP_CONFIG')]) {
-                    sh "cp \$APP_CONFIG ./src/main/resources/application-${env.DEPLOY_PROFILE}.yml"
+                withCredentials([file(credentialsId: 'application-dev', variable: 'application-dev')]) {
+                    script {
+                        sh 'cp $application-dev ./src/main/resources/application-dev.yml'
+                    }
                 }
             }
         }
@@ -51,16 +38,15 @@ pipeline{
         }
         stage('Deploy') {
             steps {
-                withEnv(["SPRING_PROFILES_ACTIVE=${env.DEPLOY_PROFILE}"]) {
-                    sh '''
-                        cp ./docker/docker-compose.yml ${SCRIPT_PATH}
-                        cp ./docker/Dockerfile ${SCRIPT_PATH}
-                        cp ./scripts/deploy.sh ${SCRIPT_PATH}
-                        cp ./build/libs/*.jar ${SCRIPT_PATH}
-                        chmod +x ${SCRIPT_PATH}/deploy.sh
-                        ${SCRIPT_PATH}/deploy.sh
-                    '''
-                }
+                sh '''
+                    cp ./docker/docker-compose.blue.yml ${SCRIPT_PATH}
+                    cp ./docker/docker-compose.green.yml ${SCRIPT_PATH}
+                    cp ./docker/Dockerfile ${SCRIPT_PATH}
+                    cp ./scripts/deploy.sh ${SCRIPT_PATH}
+                    cp ./build/libs/*.jar ${SCRIPT_PATH}
+                    chmod +x ${SCRIPT_PATH}/deploy.sh
+                    ${SCRIPT_PATH}/deploy.sh
+                '''
             }
         }
     }
