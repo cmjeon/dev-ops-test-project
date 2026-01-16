@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 ARG JAR_FILE=*.jar
 
 # JAR_FILE 경로에 해당하는 파일을 Docker 이미지 내부로 복사
-COPY ${JAR_FILE} spring-prod.jar
+COPY ${JAR_FILE} app.jar
 
 # Docker 컨테이너가 시작될 때 실행할 명령을 지정
-ENTRYPOINT ["java", "-jar", "/spring-prod.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
